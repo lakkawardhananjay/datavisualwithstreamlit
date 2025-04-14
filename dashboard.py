@@ -15,11 +15,11 @@ DynamoDBdynamodb = boto3.resource(
     aws_access_key_id=aws_access_key_id ,
     aws_secret_access_key=aws_secret_access_key
 )
-table_name = 'DetectedItems'
+table = dynamodb.Table('DetectedItems')
 
 
 # Scan all items
-response = table_name.scan()
+response = table.scan()
 items = response['Items']
 
 # Convert to dataframe for Streamlit
