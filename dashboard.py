@@ -19,7 +19,7 @@ table_name = 'DetectedItems'
 
 
 # Scan all items
-response = table.scan()
+response = table_name.scan()
 items = response['Items']
 
 # Convert to dataframe for Streamlit
