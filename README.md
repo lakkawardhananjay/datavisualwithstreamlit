@@ -1,5 +1,5 @@
 
-#Data Automation Using Cloud Computing And IOT
+## Data Automation Using Cloud Computing And IOT
 
 ## Overview
 This project provides a visual dashboard that retrieves data from an **AWS DynamoDB** and displays it in an interactive user interface. The dashboard is hosted on **Streamlit Cloud** for easy access and interaction. The main goal is to provide real-time or historical data analysis, leveraging AWS cloud services for backend storage and Streamlit for the front-end dashboard.
