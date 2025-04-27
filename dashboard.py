@@ -69,13 +69,10 @@ if 'Date' in df.columns and 'ItemName' in df.columns:
         )
         st.plotly_chart(fig, use_container_width=True)
 
-        # Calculate total manufactured items
-        if 'Quantity' in today_data.columns:
-            total_items = today_data['Quantity'].astype(int).sum()
-        else:
-            total_items = len(today_data)
-
+        # ➡️ Corrected total manufactured items = sum of bottle + cellphone counts
         total_items = today_data['ItemName'].value_counts().sum()
+
+        st.metric("Total Items Manufactured Today", total_items)
     else:
         st.info("No items manufactured today.")
 
