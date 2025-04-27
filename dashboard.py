@@ -57,7 +57,6 @@ if 'Date' in df.columns and 'ItemName' in df.columns:
     if not today_data.empty:
         st.subheader(f"Today's Manufacturing Distribution ({today})")
 
-        # Correct counting for pie chart
         today_counts = today_data['ItemName'].value_counts().reset_index()
         today_counts.columns = ['ItemName', 'Count']
 
@@ -70,7 +69,13 @@ if 'Date' in df.columns and 'ItemName' in df.columns:
         )
         st.plotly_chart(fig, use_container_width=True)
 
-        st.metric("Total Items Manufactured Today", len(today_data))
+        # Calculate total manufactured items
+        if 'Quantity' in today_data.columns:
+            total_items = today_data['Quantity'].astype(int).sum()
+        else:
+            total_items = len(today_data)
+
+        st.metric("Total Items Manufactured Today", total_items)
     else:
         st.info("No items manufactured today.")
 
