@@ -65,7 +65,7 @@ with col1:
     st.metric("Total Items Manufactured Till Now", total_items_all_time)
 
 with col2:
-    st.metric("Total Items Manufactured Today", total_items_today)
+    st.metric("Total no. of objects Manufactured Today", total_items_today)
 
 # --- Item Distribution Bar Chart
 if 'ItemName' in df.columns:
