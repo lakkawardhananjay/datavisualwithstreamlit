@@ -2,6 +2,7 @@ import streamlit as st
 import boto3
 import pandas as pd
 import datetime
+import plotly.graph_objects as go   # <--- Import Plotly properly
 
 # Load AWS credentials from Streamlit secrets
 aws_access_key = st.secrets["AWS_ACCESS_KEY_ID"]
@@ -37,7 +38,7 @@ if df.empty:
 
 # Convert 'Date' column to datetime
 if 'Date' in df.columns:
-    df['Date'] = pd.to_datetime(df['Date'])
+    df['Date'] = pd.to_datetime(df['Date'], errors='coerce')  # <-- safer conversion
 
 # Display title and raw data
 st.title("📊 Detected Items Dashboard")
@@ -57,15 +58,17 @@ if 'Date' in df.columns and 'ItemName' in df.columns:
         st.subheader(f"Today's Manufacturing Distribution ({today})")
 
         today_counts = today_data['ItemName'].value_counts()
-        fig = {
-            'data': [{
-                'type': 'pie',
-                'labels': today_counts.index.tolist(),
-                'values': today_counts.values.tolist(),
-                'hole': 0.4,
-            }]
-        }
-        st.plotly_chart(fig)
+        
+        # Proper Plotly figure
+        fig = go.Figure(
+            data=[go.Pie(
+                labels=today_counts.index,
+                values=today_counts.values,
+                hole=0.4
+            )]
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
         st.metric("Total Items Manufactured Today", len(today_data))
     else:
         st.info("No items manufactured today.")
