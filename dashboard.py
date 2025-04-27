@@ -2,7 +2,7 @@ import streamlit as st
 import boto3
 import pandas as pd
 import datetime
-import plotly.graph_objects as go   # <--- Import Plotly properly
+import plotly.express as px
 
 # Load AWS credentials from Streamlit secrets
 aws_access_key = st.secrets["AWS_ACCESS_KEY_ID"]
@@ -38,7 +38,7 @@ if df.empty:
 
 # Convert 'Date' column to datetime
 if 'Date' in df.columns:
-    df['Date'] = pd.to_datetime(df['Date'], errors='coerce')  # <-- safer conversion
+    df['Date'] = pd.to_datetime(df['Date'])
 
 # Display title and raw data
 st.title("📊 Detected Items Dashboard")
@@ -57,18 +57,19 @@ if 'Date' in df.columns and 'ItemName' in df.columns:
     if not today_data.empty:
         st.subheader(f"Today's Manufacturing Distribution ({today})")
 
-        today_counts = today_data['ItemName'].value_counts()
-        
-        # Proper Plotly figure
-        fig = go.Figure(
-            data=[go.Pie(
-                labels=today_counts.index,
-                values=today_counts.values,
-                hole=0.4
-            )]
-        )
+        # Correct counting for pie chart
+        today_counts = today_data['ItemName'].value_counts().reset_index()
+        today_counts.columns = ['ItemName', 'Count']
 
+        fig = px.pie(
+            today_counts,
+            names='ItemName',
+            values='Count',
+            hole=0.4,
+            title="Manufactured Items Distribution Today"
+        )
         st.plotly_chart(fig, use_container_width=True)
+
         st.metric("Total Items Manufactured Today", len(today_data))
     else:
         st.info("No items manufactured today.")
@@ -83,10 +84,3 @@ if 'Date' in df.columns:
     day_counts = df['DayOfWeek'].value_counts().reindex(days_order).fillna(0)
 
     st.bar_chart(day_counts)
-
-    st.subheader("Items Manufactured by Day (Table View)")
-    day_counts_df = pd.DataFrame({
-        'Day': day_counts.index,
-        'Items Manufactured': day_counts.values
-    })
-    st.table(day_counts_df)
