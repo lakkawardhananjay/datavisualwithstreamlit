@@ -75,7 +75,7 @@ if 'Date' in df.columns and 'ItemName' in df.columns:
         else:
             total_items = len(today_data)
 
-        st.metric("Total Items Manufactured Today", total_items)
+        total_items = today_data['ItemName'].value_counts().sum()
     else:
         st.info("No items manufactured today.")
 
